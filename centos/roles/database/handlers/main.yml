@@ -1,0 +1,20 @@
+- name: Restarting database service
+  service:
+    name: mariadb
+    state: restarted
+    enabled: true
+
+- name: Securing mysql database
+  mysql_secure_installation:
+    login_password: ''
+    new_password: "{{ root_password }}"
+    user: root
+    login_host: localhost
+    hosts: ['localhost', '127.0.0.1', '::1']
+    change_root_password: true
+    remove_anonymous_user: true
+    disallow_root_login_remotely: true
+    remove_test_db: true
+  register: mysql_secure
+
+

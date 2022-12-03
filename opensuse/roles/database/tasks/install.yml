@@ -1,0 +1,66 @@
+
+- name: Installing database components
+  community.general.zypper:
+    name:
+      - mariadb-client 
+      - mariadb 
+
+- name: Installing python-PyMySQL (components)
+  expect:
+    command: zypper install python-PyMySQL
+    responses:
+      (?i)Choose from above solutions by number or cancel: 2
+      (?i)Overall download size: y
+
+- name: Copying openstack.cnf file
+  copy:
+    src: openstack.cnf
+    dest: /etc/my.cnf.d/openstack.cnf
+    owner: root
+    group: root
+    mode: 644
+
+  notify: Restarting database service
+
+- name: Starting and enabling database service
+  service:
+    name: mysql
+    state: started
+    enabled: true
+
+- name: Set the root password 
+  mysql_user: login_user=root login_password="{{ root_password }}" user=root password="{{ root_password }}"
+
+- name: Secure the root user for IPV6 localhost (::1)
+  mysql_user: login_user=root login_password="{{ root_password }}" user=root password="{{ root_password }}" host="::1"
+
+- name: Secure the root user for IPV4 localhost (127.0.0.1)
+  mysql_user: login_user=root login_password="{{ root_password }}" user=root password="{{ root_password }}" host="127.0.0.1"
+
+- name: Secure the root user for localhost domain
+  mysql_user: login_user=root login_password="{{ root_password }}" user=root password="{{ root_password }}" host="localhost"
+
+- name: Secure the root user for server_hostname domain
+  mysql_user: login_user=root login_password="{{ root_password }}" user=root password="{{ root_password }}" host="{{ ansible_fqdn }}"
+
+- name: Deletes anonymous server user
+  mysql_user: login_user=root login_password="{{ root_password }}" user="" host_all=yes state=absent
+
+- name: Removes the test database
+  mysql_db: login_user=root login_password="{{ root_password }}" db=test state=absent
+
+- block: 
+  - name: Verifying installation of mysql 
+    shell: mysql --version
+    register: mysql_version
+    
+  - debug: 
+      msg="{{ mysql_version }}"
+
+- block: 
+  - name: Verifying if mysql is started and running in the background 
+    shell: systemctl status mysql
+    register: mysql_service
+    
+  - debug: 
+      msg="{{ mysql_service }}"

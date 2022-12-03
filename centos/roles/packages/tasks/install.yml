@@ -1,0 +1,20 @@
+- name: Enabling openstack repository
+  yum:
+    name: centos-release-openstack-train
+    state: latest
+
+- name: Downloading and installing the RDO repository to enable openstack repository
+  yum:
+    name: https://rdoproject.org/repos/rdo-release.rpm
+    state: present
+
+- name: Updating repository and upgrading packages
+  yum:
+    name: '*'
+    state: latest
+    update_cache: true
+
+- name: Installing openstack
+  yum:
+    name: 
+      - python-openstackclient

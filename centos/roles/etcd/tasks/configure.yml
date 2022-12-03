@@ -1,0 +1,14 @@
+- name: Editing etcd.conf file
+  copy:
+    src: etcd.conf
+    dest: /etc/etcd/etcd.conf
+    owner: root
+    group: root
+    mode: 644
+
+- name: Starting etcd service
+  service:
+    name: etcd
+    state: started
+    enabled: true
+

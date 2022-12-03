@@ -1,0 +1,40 @@
+
+- name: Installing memcached
+  community.general.zypper:
+    name: 
+      - memcached 
+      - python-python-memcached
+    state: latest
+
+- name: Editing memcached.conf file
+  copy:
+    src: memcached
+    dest: /etc/sysconfig/memcached
+    owner: root
+    group: root
+    mode: 644
+  
+  notify: Restarting memcached
+
+- name: Starting memcached service
+  service:
+    name: memcached 
+    state: started
+    enabled: true
+
+- block:
+  - name: Verifying installation of memcached
+    command: memcached --version
+    register: memcached_version
+
+  - debug:
+       msg="{{ memcached_version }}"
+
+- block:
+  - name: Verifying if memcached is started and running in the background
+    command: systemctl status memcached
+    register: memcached_service
+
+  - debug:
+       msg="{{ memcached_service }}"
+
