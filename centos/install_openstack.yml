@@ -4,15 +4,14 @@
   become: true
   pre_tasks: 
 
-  - name: Updating and upgrading the operating system
+  - name: Updating the repository
     yum:
-      name: "*"
-      state: latest
       update_cache: true
 
 - hosts: controller_node 
   become: true
   roles:
+    - network
     - ntp
     - packages
     - database 

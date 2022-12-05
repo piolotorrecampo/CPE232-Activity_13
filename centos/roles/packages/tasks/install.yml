@@ -7,6 +7,7 @@
   yum:
     name: https://rdoproject.org/repos/rdo-release.rpm
     state: present
+  ignore_errors: true
 
 - name: Updating repository and upgrading packages
   yum:
@@ -16,5 +17,7 @@
 
 - name: Installing openstack
   yum:
-    name: 
+    name:
+      - openstack-selinux
       - python-openstackclient
+      - openstack-utils

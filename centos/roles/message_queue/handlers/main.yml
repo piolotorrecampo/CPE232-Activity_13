@@ -3,3 +3,5 @@
     rabbitmqctl add_user openstack "{{ root_password }}"
     rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 
+- name: Reloading firewall
+  command: firewall-cmd --reload

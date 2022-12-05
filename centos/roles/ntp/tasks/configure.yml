@@ -8,4 +8,10 @@
 
   notify: Restarting chrony
 
+- name: Adding service in firewall
+  ansible.posix.firewalld:
+    service: ntp
+    permanent: yes
+    state: enabled
 
+  notify: Reloading firewall

@@ -14,6 +14,14 @@
     state: started
     enabled: true
 
+- name: Adding mysql service to firewall
+  ansible.posix.firewalld:
+    service: mysql
+    permanent: yes
+    state: enabled
+
+  notify: Reloading firewall
+
 - name: use "mysql_secure_installation" for Fresh MySQL Installation
   mysql_secure_installation:
     login_password: ''

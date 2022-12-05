@@ -6,6 +6,22 @@
     group: root
     mode: 644
 
+- name: Adding 2380 port to firewall
+  ansible.posix.firewalld:
+    port: 2380/tcp
+    permanent: yes
+    state: enabled
+
+  notify: Reloading firewall
+
+- name: Adding 2379 port to firewall
+  ansible.posix.firewalld:
+    port: 2379/tcp
+    permanent: yes
+    state: enabled
+
+  notify: Reloading firewall
+
 - name: Starting etcd service
   service:
     name: etcd

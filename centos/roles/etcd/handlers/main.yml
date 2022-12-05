@@ -4,3 +4,5 @@
     daemon_reload: yes
   ignore_errors: yes 
 
+- name: Reloading firewall
+  command: firewall-cmd --reload
